@@ -1,8 +1,10 @@
---  Crear base de datos y usarla
+-- Ejercicio 7: Gestion de Permisos
+
+--  Crear base de datos 
 CREATE DATABASE Empresa;
 USE Empresa;
 
---  Crear tablas de ejemplo
+--  Crear tablas 
 CREATE TABLE Empleados (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
@@ -21,7 +23,7 @@ CREATE TABLE Clientes (
     email VARCHAR(100)
 );
 
--- Insertar algunos datos
+-- Insertar datos
 INSERT INTO Empleados (nombre, puesto) VALUES 
 ('Juan Pérez', 'Analista'),
 ('María Gómez', 'Vendedora');
@@ -46,7 +48,6 @@ FLUSH PRIVILEGES;
 
 -- Probar acciones desde el usuario analista
 
--- Estas instrucciones deberías ejecutarlas conectándote como el usuario 'analista'
 -- Por ejemplo, en consola:
 -- mysql -u analista -p
 
