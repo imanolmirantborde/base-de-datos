@@ -32,6 +32,15 @@ db.empleados.deleteOne(
 // Comprobar que se eliminó
 db.empleados.find({ puesto: "Pasante" });
 
+{ /* ---------------------EJERCICIO 2 --------------------- */}
+// Busca la edad de los empleados con edades entre 25 y 40 años
+db.empleados.find({
+  edad: { $gte: 25, $lte: 40 }
+});
+
+// Comprobar que los empleados están en la colección
+db.empleados.find();
+
 { /* ---------------------EJERCICIO 4 --------------------- */}
 
 // Para agregar la dirección a un empleado específico.
@@ -100,3 +109,15 @@ db.clientes.createIndex(
 // Comprobaciones
 db.clientes.find();
 db.clientes.getIndexes();
+
+{ /* ---------------------EJERCICIO 9 --------------------- */}
+/*Los benefisios de usar Replica Set son que si falla algun nodo primario hay uno que lo rempalzara automaticamente.
+Tambien tiene otra ventaja y es que al estar los datos replicados en distintos nodos, puede hacer tareas menores 
+utilizando menos memoria y recursos.
+Otra cosa que hace bien es que es facil detectar errores y actualizar nodos sin que el sistema deje de funcionar*/
+
+/*Los beneficios del Sharding en bases de datos de alto volumen son que al divide los datos entre múltiples servidores es mas facil
+manejar volúmenes mucho mayores.
+Tambien ya que las consultas se distribuyen entre shards, reduciendo la carga en cada uno y acelerando la respuesta.
+El Sharding tambien permite trabajar con mas de un servidor y ayuda a la distribucion de datos, y MongoDB balancea 
+los datos entre shards cuando detecta que están desbalanceados.*/
