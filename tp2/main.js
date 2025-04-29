@@ -88,6 +88,30 @@ db.empleados.updateMany(
 // Comprobar que se agregó el campo
 db.empleados.find();
 
+{ /* ---------------------EJERCICIO 5 --------------------- */}
+
+// creación de la colección ventas
+db.ventas.insertMany([
+    { producto: "Camisa", cantidad: 5, precio_unitario: 20 },
+    { producto: "Pantalón", cantidad: 3, precio_unitario: 50 },
+    { producto: "Remera", cantidad: 2, precio_unitario: 20 },
+    { producto: "Zapatos", cantidad: 1, precio_unitario: 80 },
+    { producto: "Zapatillas", cantidad: 4, precio_unitario: 50 }
+]);
+
+// comprueba que se insertaron los documentos de ventas
+db.ventas.find();
+
+// calcula el total de ventas por producto.
+db.ventas.aggregate([
+    {
+        $group: {   
+            _id: "$producto", 
+            totalVentas: { $sum: { $multiply: ["$cantidad", "$precio_unitario"] } } 
+            // suma de cantidad * precio_unitario
+        }
+    }
+]);
 
 { /* ---------------------EJERCICIO 6 --------------------- */}
 
@@ -109,6 +133,47 @@ db.clientes.createIndex(
 // Comprobaciones
 db.clientes.find();
 db.clientes.getIndexes();
+
+{ /* ---------------------EJERCICIO 7 --------------------- */}
+
+// crea la colección cursos
+db.cursos.insertMany([
+    { nombre: "Base de datos II", duracion: "3 meses" },
+    { nombre: "Programación", duracion: "4 meses" },
+    { nombre: "Inglés", duracion: "1 mes" }
+]);
+
+// comprueba que se insertaron los documentos de cursos
+db.cursos.find();
+// una vez ejecutado, usamos el id para la coleccion alumnos
+
+// crea la colección alumnos
+db.alumnos.insertMany([
+    {
+        nombre: "Pedro",
+        edad: 18,
+        id_cursos: 
+            [ObjectId("68112287db486c7359e79990"), // Base de datos II
+            ObjectId("68112287db486c7359e79991")] // Programación
+        },
+        {
+        nombre: "Belen",
+        edad: 20,
+        id_cursos: [
+            ObjectId("68112287db486c7359e79991"),   // Programación
+            ObjectId("68112287db486c7359e79992")]  // Inglés
+        },
+        {
+        nombre: "Micaela",
+        edad: 22,
+        id_cursos: [
+            ObjectId("68112287db486c7359e79990"),   // Base de datos II
+            ObjectId("68112287db486c7359e79992")]  // Inglés
+        }
+]);
+
+// comprueba que se insertaron los documentos de alumnos
+db.alumnos.find();
 
 { /* ---------------------EJERCICIO 9 --------------------- */}
 /*Los benefisios de usar Replica Set son que si falla algun nodo primario hay uno que lo rempalzara automaticamente.
