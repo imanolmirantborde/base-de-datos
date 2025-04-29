@@ -40,6 +40,13 @@ db.empleados.find({
 
 // Comprobar que los empleados están en la colección
 db.empleados.find();
+{ /* ---------------------EJERCICIO 3 --------------------- */}
+// Recupera los nombres y puestos de todos los empleados, sin mostrar el _id.
+db.empleados.find({}, { nombre: 1, puesto: 1, _id: 0 });
+//Se utiliza una proyeccion para mostrar solamente ciertos campos 
+
+
+db.empleados.find();
 
 { /* ---------------------EJERCICIO 4 --------------------- */}
 
@@ -174,6 +181,21 @@ db.alumnos.insertMany([
 
 // comprueba que se insertaron los documentos de alumnos
 db.alumnos.find();
+
+{ /* ---------------------EJERCICIO 8 --------------------- */}
+//Realiza una agregación donde se combinen los datos de alumnos y cursos usando $lookup.
+db.alumnos.aggregate([
+    {
+        $lookup: {
+            from: "cursos", //la coleccion a la que se quiere hacer la relacion
+            localField: "id_cursos",//campo de  alumnos
+            foreignField: "_id", //campo de cursos
+            as: "cursos" //nombre del nuevo campo con los datos combinados
+        }
+    }
+]);
+// devuelve un array de objetos con los datos combinados de alumnos y cursos
+
 
 { /* ---------------------EJERCICIO 9 --------------------- */}
 /*Los benefisios de usar Replica Set son que si falla algun nodo primario hay uno que lo rempalzara automaticamente.
