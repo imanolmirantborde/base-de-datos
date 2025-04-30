@@ -208,3 +208,38 @@ manejar volúmenes mucho mayores.
 Tambien ya que las consultas se distribuyen entre shards, reduciendo la carga en cada uno y acelerando la respuesta.
 El Sharding tambien permite trabajar con mas de un servidor y ayuda a la distribucion de datos, y MongoDB balancea 
 los datos entre shards cuando detecta que están desbalanceados.*/
+
+{ /* ---------------------EJERCICIO 10 --------------------- */}
+// Seguridad y backups 
+// 1- Crear un usuario con permisos de lectura y escritura
+// Seleccionamos la base de datos 'empresa'.
+use empresa 
+// Creamos un usuario llamado 'belen' con contraseña '1356'.
+// El rol 'readWrite' le da permisos para leer y escribir en la base de datos 'empresa'.
+db.createUser({ user: "belen", pwd:"1356", roles: ["readWrite"]})
+
+// 2- Comandos necesarios para hacer backup y restauración de una base de datos.
+//        Backup 
+// Comandos a usar: mongodump 
+// Este comando crea un respaldo de la base de datos 'empresa'.
+// Se ejecuta desde la terminal del sistema operativo que uses, no dentro de Mongodb:
+mongodump --db=empresa --out=./backup_empresa
+// backup_empresa es la carpeta donde almacenaremos el backup.
+
+//       Restauración
+// Comando a usar: mongorestore
+// Antes de hacer la restauración, hay que eliminar, si existe, la base de datos 'empresa'.
+// Esto es para que no haya conflictos o duplicados al quereer restaurar los datos.
+// Tenemos que eliminar la base de datos desde la terminal de mongodb:
+db.dropDatabase('empresa')
+// Ahora si podemos seguir con la restauracion de la base de datos:
+// Tenemos que ejecutar el comando desde la terminal del sistema operativo que usemos:
+mongorestore --db empresa ./backup_empresa/empresa
+// Restauramos la base de datos desde la carpeta donde hicimos el backup.
+// 'backup_empresa' es la carpeta que tiene la subcarpeta 'empresa' con todos los datos respaldados.
+
+
+
+
+
+
