@@ -1,0 +1,15 @@
+//Ejercicio 8: Uso de $lookup 
+// Realiza una agregación donde se combinen los datos de alumnos y cursos usando $lookup.
+use ('empresa');
+db.alumnos.aggregate([
+    {
+        //$lookup: realiza una relacion entre dos colecciones
+        $lookup: {
+            from: "cursos", //la coleccion a la que se quiere hacer la relacion
+            localField: "id_cursos",//campo de  alumnos
+            foreignField: "_id", //campo de cursos
+            as: "cursos" //nombre del nuevo campo con los datos combinados
+        }
+    }
+]);
+// devuelve un array de objetos con los datos combinados de alumnos y cursos

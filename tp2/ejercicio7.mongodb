@@ -1,0 +1,45 @@
+// Ejercicio 7: Referencias
+// Crea una colección cursos y una colección alumnos.
+//Luego inserta documentos donde los alumnos tengan una lista de
+//  id_curso referenciando a los cursos.
+use ('empresa');
+// crea la coleccion cursos
+db.cursos.insertMany([
+    { nombre: "Base de datos II", duracion: "3 meses" },
+    { nombre: "Programación", duracion: "4 meses" },
+    { nombre: "Inglés", duracion: "1 mes" }
+]);
+
+// comprueba que se insertaron los documentos de cursos
+db.cursos.find();
+// una vez ejecutado, usamos el id para la coleccion alumnos
+
+// crea la colección alumnos, que tienen una lista de id de cursos
+db.alumnos.insertMany([
+    {
+        nombre: "Pedro",
+        edad: 18,
+        id_cursos: 
+        // se usa ObjectId para los id de los documentos
+        //ObjectId es un metodo dee la libreria de mongoDB que genera un id unico
+            [ObjectId("68112287db486c7359e79990"), // Base de datos II
+            ObjectId("68112287db486c7359e79991")] // Programación
+        },
+        {
+        nombre: "Belen",
+        edad: 20,
+        id_cursos: [
+            ObjectId("68112287db486c7359e79991"),   // Programación
+            ObjectId("68112287db486c7359e79992")]  // Ingles
+        },
+        {
+        nombre: "Micaela",
+        edad: 22,
+        id_cursos: [
+            ObjectId("68112287db486c7359e79990"),   // Base de datos II
+            ObjectId("68112287db486c7359e79992")]  // Ingles
+        }
+]);
+
+// comprueba que se insertaron los documentos de alumnos
+db.alumnos.find();

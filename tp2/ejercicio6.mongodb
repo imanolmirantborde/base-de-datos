@@ -1,0 +1,25 @@
+//Ejercicio 6: Índices
+// Crea un índice compuesto
+//sobre los campos apellido y nombre en una colección de clientes.
+use ('empresa');
+// Creo la coleccion clientes
+db.createCollection("clientes");
+// Inserrto datos
+db.clientes.insertMany([
+    { nombre: "Juan", apellido: "Pérez", edad: 30 },
+    { nombre: "Ana", apellido: "Gómez", edad: 25 },
+    { nombre: "Luis", apellido: "Fernández", edad: 40 }
+]);
+
+// Crear indice compuesto (ordenar datos en varios campos)
+// 1 es ascendente
+// -1 es descendente
+// si no se especifica es 1 
+
+db.clientes.createIndex(
+    { apellido: 1, nombre: 1 }
+);
+
+// Comprobaciones
+db.clientes.find();
+db.clientes.getIndexes(); 

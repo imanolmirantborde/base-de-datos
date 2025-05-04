@@ -1,0 +1,12 @@
+//Ejercicio 2: Búsquedas con operadores
+// Busca la edad de los empleados con edades entre 25 y 40 años
+use ('empresa');
+
+db.empleados.find({
+    edad: { $gte: 25, $lte: 40 }
+    // $gte: mayor o igual que
+    // $lte: menor o igual que
+  });
+
+  
+  db.empleados.find();
