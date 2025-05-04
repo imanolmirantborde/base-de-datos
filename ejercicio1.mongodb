@@ -1,0 +1,30 @@
+//Ejercicio 1: CRUD básico
+// Crea una base de datos llamada empresa.
+//use empresa funcion para usar la base de datos, si no exsiste la crea y queda pendiente al ingreso de datos
+
+use("empresa"); 
+
+//db.empleados.drop(); o verificar si ya exsisten antes de insertar
+db.empleados.insertMany([ 
+    { nombre: "Imanol", edad: 30, puesto: "Software Developer" },
+    { nombre: "Jimena", edad: 25, puesto: "Project Manager" },
+    { nombre: "Nicolás", edad: 55, puesto: "Pasante" }
+]);
+
+// Compruebo que se insertaron los documentos
+// db.empleados.find();
+
+// Actualiza la edad de uno de los empleados
+db.empleados.updateOne(
+    { nombre: "Imanol" },
+    { $set: { edad: 31 } }
+);
+
+db.empleados.find({ nombre: "Imanol" });
+
+// Elimina el empleado que tiene el puesto de "pasante".
+db.empleados.deleteOne(
+    { puesto: "Pasante" }
+);
+
+db.empleados.find();

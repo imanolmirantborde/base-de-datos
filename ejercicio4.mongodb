@@ -1,0 +1,52 @@
+// Ejercicio 4: Documentos embebidos
+
+// Agrega un campo direccion que incluya calle, ciudad y codigo_postal
+
+// agrego el campo direccion de forma especifica
+use ('empresa');
+
+db.empleados.updateOne(
+    { nombre: "Imanol" },
+    {
+        // $set: permite agregar un campo a un documento
+        $set: {
+            direccion: {
+                calle: "Av. Colón 1234",
+                ciudad: "Bahía Blanca",
+                codigo_postal: "8000"
+            }
+        }
+    }
+);
+db.empleados.updateOne(
+    { nombre: "Jimena" },
+    {
+        $set: {
+            direccion: {
+                calle: "Av. Rivadavia 5678",
+                ciudad: "Buenos Aires",
+                codigo_postal: "1000"
+            }
+        }
+    }
+);
+
+// Para agregar la direccion a todos los empleados.
+
+
+db.empleados.updateMany(
+    {},
+    {
+        $set: {
+            direccion: {
+                calle: "11 de abril 475",
+                ciudad: "Bahía Blanca",
+                codigo_postal: "8000"
+            }
+        }
+    }
+);
+// queda esta ultima informacion en todos los empleados 
+
+
+db.empleados.find();
