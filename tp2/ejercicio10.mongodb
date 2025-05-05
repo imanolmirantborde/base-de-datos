@@ -1,30 +1,36 @@
-// Ejercicio 10: Seguridad y backups
-// Muestra los pasos para crear un usuario con permisos de lectura y escritura, 
-//y los comandos necesarios para hacer backup y restauración de una base de datos.
+//Seguridad y backups
 
-use ('empresa');
+// 1 - Crear un usuario con permisos de lectura y escritura
 
-db.createUser({ // crea un usuario
-    user: "belen",
-    pwd: "1356",
-    roles: ["readWrite"] // permiso de lectura y escritura
-  });
+use('empresa');
 
-// Comandos necesarios para hacer backup y restauracion
-// se ejecuta en la terminal, en la carpeta donde se encuentra la base de datos
+db.createUser({
+  user: "belen",
+  pwd: "1356",
+  roles: ["readWrite"]
+});
 
-// Backup:
-// mongodump: genera un archivo de backup en formato BSON
+
+// 2 - Backup y restauración de base de datos
+
+// El backup se ejecuta en la terminal del sistema operativo que uses
+// comando necesario:
 // mongodump --db=empresa --out=./backup_empresa
-// cree una carpeta llamada 'backup_empresa' en la carpeta donde se encuentra la base de datos
 
 
+// Restauración
 
+// Primero tenemos que eliminar la base de datos 'empresa' si ya existe,
+// para que no ocurran conflictos o duplicados.
 
-// Restauración:
-// mongorestore: restaura una base de datos desde un archivo de backup BSON
+use('empresa');
+db.dropDatabase();
+
+// Ahora sí podemos seguir con la restauración de la base de datos.
+// Ejecutamos el siguiente comando desde la terminal del sistema operativo:
 // mongorestore --db=empresa ./backup_empresa/empresa
-// Restauramos la base de datos desde la carpeta donde hicimos el backup.
+// Este comando restaura la base de datos 'empresa' desde la carpeta donde hicimos el backup.
+// En este caso, 'backup_empresa' es la carpeta que contiene la subcarpeta 'empresa' con todos los datos respaldados.
 
 
 
