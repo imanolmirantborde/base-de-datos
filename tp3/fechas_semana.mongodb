@@ -1,0 +1,24 @@
+use ('kaufladen');
+// Obtener el total vendido por semana
+// 1. Obtener el día de la semana y el total vendido
+// 2. Agrupar por día de la semana y sumar el total vendido
+// 3. Ordenar de mayor a menor cantidad de ventas
+// 4. Mostrar el día de la semana y la cantidad de ventas
+db.ventas.aggregate([
+  {
+    $project: {
+      diaSemana: { $dayOfWeek: "$fecha" },
+      total: 1
+    }
+  },
+  {
+    $group: {
+      _id: "$diaSemana",
+      cantidadVentas: { $sum: 1 },
+      totalVendido: { $sum: "$total" }
+    }
+  },
+  {
+    $sort: { cantidadVentas: -1 }  
+  }
+])
