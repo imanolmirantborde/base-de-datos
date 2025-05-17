@@ -17,6 +17,6 @@ db.ventas.aggregate([
     }
   },
   {
-    $sort: { _id: 1 }  // Ordenar por mes (de enero a diciembre)
+    $sort: { _id: 1 }  
   }
 ])
