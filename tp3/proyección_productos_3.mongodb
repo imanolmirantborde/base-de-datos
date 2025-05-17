@@ -1,6 +1,0 @@
-use('kaufladen')
-
-//Para calcular el precioConImpuesto, usamos uno de los operadores aritmeticos ($multiply).
-// Multiplica el precio inicial por el 1.21, que equivale a sumarle al precio inical el 21%.
-
-db.productos.aggregate([{ $project: { _id: 0, nombre: 1, precio: 1, precioConImpuesto: { $multiply: ["$precio", 1.21] } } }]);

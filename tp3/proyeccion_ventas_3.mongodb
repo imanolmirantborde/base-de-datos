@@ -1,6 +1,0 @@
-use('kaufladen');
-
-//Para calcular el descuento, usamos uno de los operadores aritmeticos ($multiply).
-// Multiplica el total por 0.1, dando como resultado el 10% del total.
-
-db.ventas.aggregate([{ $project: { _id: 1, cliente: "$cliente.nombre", total: 1, descuento: { $multiply: ["$total", 0.1] } } }]);
