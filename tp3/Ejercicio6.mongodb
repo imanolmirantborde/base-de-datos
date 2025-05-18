@@ -1,4 +1,25 @@
 use ('kaufladen');
+// Obtener el total vendido por mes
+// 1. Obtener el mes de la fecha y el total vendido
+// 2. Agrupar por mes y sumar el total vendido
+// 3. Ordenar de enero a diciembre
+db.ventas.aggregate([
+  {
+    $project: {
+      mes: { $month: "$fecha" },
+      total: 1
+    }
+  },
+  {
+    $group: {
+      _id: "$mes",
+      totalVendido: { $sum: "$total" }
+    }
+  },
+  {
+    $sort: { _id: 1 }  
+  }
+])
 // Obtener el total vendido por semana
 // 1. Obtener el día de la semana y el total vendido
 // 2. Agrupar por día de la semana y sumar el total vendido
@@ -22,3 +43,4 @@ db.ventas.aggregate([
     $sort: { cantidadVentas: -1 }  
   }
 ])
+
