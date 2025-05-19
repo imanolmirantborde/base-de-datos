@@ -1,0 +1,23 @@
+use("kaufladen");
+
+// Crear un pipeline que obtenga los productos más valorados (puntuación promedio más alta) con al menos 2 valoraciones.
+
+db.productos.aggregate([
+    {
+    $project: {
+        nombre: 1,
+        cantidad_valoraciones: { $size: "$valoraciones" },
+        promedio_puntuacion: {
+        $avg: "$valoraciones.puntuacion"
+        }
+    }
+    },
+    {
+    $match: {  // filtro para q tenga al menos 2 valoraciones
+        cantidad_valoraciones: { $gte: 2 }
+    }
+    },
+    {
+    $sort: { promedio_puntuacion: -1 }  // ordena el promedio d mayor a menor 
+    }
+]);

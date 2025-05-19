@@ -1,0 +1,60 @@
+use("kaufladen");
+
+// Clasificar los productos según su precio: "Económico" (<100), "Estándar" (100-500), "Premium" (>500).
+
+db.productos.aggregate([
+    {
+    $project: {
+        nombre: 1,
+        precio: 1,
+        categoria_precio: {
+        $cond: [
+            { $lt: ["$precio", 100] }, "Económico",
+            {
+            $cond: [
+                { $lte: ["$precio", 500] }, "Estándar", "Premium"
+            ]
+            }
+        ]
+        }
+    }
+    },
+    {
+    $group: {
+        _id: "$categoria_precio",
+        total_productos: { $sum: 1 },
+        precio_promedio: { $avg: "$precio" }
+    }
+    }
+]);
+
+use("kaufladen");
+
+// Clasificar las ventas según su total: "Pequeña" (<200), "Mediana" (200-800), "Grande" (>800).
+
+db.ventas.aggregate([
+    {
+    $project: {
+        cliente: 1,
+        total: 1,
+        tipo_venta: {
+        $cond: [
+            { $lt: ["$total", 200] }, "Pequeña",
+            {
+            $cond: [
+                { $lte: ["$total", 800] }, "Mediana", "Grande"
+            ]
+            }
+        ]
+        }
+    }
+    },
+    {
+    $group: {
+        _id: "$tipo_venta",
+        cantidad_ventas: { $sum: 1 },
+        total_ventas: { $sum: "$total" },
+        promedio_ventas: { $avg: "$total" }
+    }
+    }
+]);
