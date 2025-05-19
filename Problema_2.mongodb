@@ -1,0 +1,62 @@
+
+
+use ('kaufladen')
+
+//un pibpeline q obtenga ventas totales por mes indicanto el prod mas vendido por mes
+
+db.ventas.aggregate([
+    {
+       $addFields: { //extraigo el mes usando el operador $month, lo agrego a un nuevo campo a cada docu
+         mes: {$month: "$fecha"}
+       }
+    },
+    {
+        $group:
+        { // agrupo un prod_id ´pr mes
+            _id:{ mes: "$mes", producto_id: "$producto_id"},
+            total_unidades:{$sum: "$cantidad"}, //cant vendida de ese prod ese mes
+            total_ventas:{$sum:1} //sumo de a 1 venta
+            
+
+        }
+
+    },
+    {
+        $sort: {
+            "_id.mes":1,//agrupo por mes 
+            total_unidades:-1 //para quedarme con el mas vendido
+        }
+    },
+    {
+        $group:{
+            _id: "$_id.mes",
+           ventas_mes: {$sum:"$total_ventas"}, //cada vez q hice 1 venta
+           prod_mas_vendido: {$first:"$_id.producto_id"},// ya habia ordenado los docus segun el total_unidades, por eso el primero va ser el mas vendido
+           unidades_vendidas: {$first:"$total_unidades"}
+            
+
+        }
+
+    },
+        {
+        $lookup: { //quiero acceder a la otra coleccion para tener el nombre del producto para el result
+          from: "productos",
+          localField: "prod_mas_vendido", //comparo con el id seleccionado del pipeline
+          foreignField: "_id",
+          as: "info_producto"
+        }
+
+    },
+      //el lookup devuelve lso datos relaciondos como un array, enotonces para hacerlo un campo plano en el result, uso unwind (no es obligatorio, es por presentacion)
+    { $unwind: "$info_producto"},
+    { //el orden resultante del project no esta garantizado
+        $project: {
+          _id:0,
+          mes: "$_id",
+          ventas_mes:1,
+          nombre: "$info_producto.nombre",
+          prod_mas_vendido:1,
+          unidades_vendidas:1
+        }
+    }
+])

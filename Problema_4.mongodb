@@ -1,0 +1,211 @@
+use ('kaufladen');
+
+//un sistema dse recomendaciom basico para un cliente dado, recomiende productos segun
+// a- productos de la misma categoria q ha comrprado aun
+// b- prod popoulas (mas vendidos) q no com0pro aun
+// c- prod mejor valorados en su catgorias de interes 
+
+//el sistema inciso a va a estar orientado a la cliente Ana martinez
+//a- nnecesito saber las categorias q ana ya compro, y luego busco q productos no compro de esa categoria. trabajo con ventas para la info de clientes
+
+db.ventas.aggregate([
+    {$match: {"cliente.nombre": "Ana Martínez"}},
+    {
+        $lookup: { // un array conm la info de los productos seleccionados por ana
+          from: "productos",
+          localField: "producto_id",
+          foreignField: "_id",
+          as: "info_prod"
+        }
+    },
+    {$unwind: "$info_prod"}, // para acceder a los elemntos del array como campos planos, uso unwind
+    {
+        $group: { //agrupo todas las compras de ana 
+            _id:null, //no especifico la clave por la cual se agrupan los elementos
+        //mongodb lo asimila como que agrupe todos los docus que lleguen a esta etapa en un solo docu de salida(todo lo que tenga q ver con ana)
+
+            categorias_interes:{$addToSet: "$info_prod.categoria"},
+            productos_comprados:{$addToSet: "$producto_id"}
+        //addtoset, un operador de acumulacion, se utiliza dentro de group. Recopila los valores q especifico sin duplicar y el result es un array con ls valores. 
+        //entonces cree un array con las categorias y los productos q ana compro
+
+        }
+    },
+    //dsps de este group solo me quedo con la info guardada en los arrays
+    //un lookup q busque productos en la coleccion productos con comparacion entre campos de docus "pipeline personalizadpo"
+    {
+        $lookup: {
+          from: "productos",
+          let: { // defino variables para q esten disponibles en el subpipeline
+            categorias: "$categorias_interes", //accedo con $$categorias y $$comprados
+            comprados:"$productos_comprados"
+          },
+          //etapa del subpipeline
+          pipeline: [
+            {
+                $match:{ // filtro los documentos q cumplan los criterios
+                    $expr:{ //permite usar operadores de agregacion en un match
+                        $and:[
+                            //el prod pertenece a una categoria q ana ya compro
+                            {$in: ["$categoria", "$$categorias"]},
+                            //$categoria es del campo en la coleccion productos
+                            //$$categorias es de la variable definida con los intereses de ana
+                            {$not: {$in:["$id", "$$comprados"]}}
+                            //los productos que no compro todavia 
+                        ]
+                    }
+                }
+            }
+          ],
+          as: "recomendados_por_categoria" // un array de productos relevantes para ana q  no compro todavia
+
+        }
+    },
+    { //queda mas prolija esta impresion, podria especificar que el profucto recomensdado despligue solamente algunos campos
+        $project:{
+            _id: 0, 
+            categorias_interes:1,
+            recomendados_por_categoria:{
+                $map:{ //operador que itera en cada elemento
+                    input: "$recomendados_por_categoria", //array de ntrada
+                    as: "item",//variable q representa cada elemento del array
+                    in:{ //creo un nuevo objeto con los campos seleccionados
+                        nombre: "$$item.nombre",
+                        precio: "$$item.precio"
+                    }
+                }
+            }
+        }
+    }
+
+
+])
+
+//B recomendar populares. un pipeline para obtener productos que son los mas vendidos, que carlos lopez todavia no compro. trabajo con ventas para acceder a la info de carlos
+//tengo que contar cuantas veces se vendio cada producto y ordenarlo de forma ascendente para saber los mas populares 
+//filtrar lo que carlos no compro
+use ('kaufladen'); //tengo que poner aca el use, para podder seleccionar y ejecutar esta parte del archivpo
+db.ventas.aggregate([
+   //empiezo agrupando y ordenando los docu por los mas vendidos
+   {
+    $group: { //agrupo doc con mismo id de productgo, y por cada uno la variable cantidad suma 1
+      _id: "$producto_id",
+      cantidad_vendida: {$sum:1}
+    }
+   },
+   {$sort:{cantidad_vendida: -1}},// de mayor a menor para ver primero los mas vendidos
+
+   //traigo la info del producto para mostrat los campos en el result
+   {
+    $lookup: {
+      from: "productos",
+      localField: "_id", //_id del group
+      foreignField: "_id",
+      as: "info_prod"
+    }
+   },
+   {$unwind:"$info_prod"}, //desgloso el array para acceder a los elementos 
+   //encontrar los prductods q compro carlos, lookup permie hacer busqquedas cruzadas
+   {
+    $lookup: {
+      from: "ventas",
+      let:{id_produ: "$_id"}, //variable q necesito disppo en el subpipline
+      //accedo a ella como $$id_produ
+      pipeline:[
+        {
+            $match:{
+                $expr:{
+                    $and:[
+                        {$eq: ["$producto_id", "$$id_produ"]},
+                        {$eq:["$cliente.nombre", "Carlos López"]}
+                    ]
+
+                }
+            }
+        }
+      ],
+      as: "compras_de_Carlos" //
+    }
+   },
+   //un match para excluir, solo deja pasar los documentos q tengan de result "compras_de_Carlors":[]
+   {
+    $match:{ 
+        "compras_de_Carlos":{$size:0}
+    }
+   },
+   //proyeccion para devolucion bonita
+   {
+    $project: {
+      _id:0,
+      nombre: "$info_prod.nombre",
+      precio:"$info_prod.precio",
+      cantidad_vendida:1,
+      
+      
+    }
+   },
+   //limito un top 3
+   {$limit:3}
+
+])
+
+// c-prod mejor valorados en su catgorias de interes 
+// detectar las categorias que uso Sofía Torres, calcular promedio del puntuacion de cada produ
+//ordeno y doy un top 3, no importa si sofi ya lo compro
+
+use ('kaufladen');
+
+db.ventas.aggregate([
+    {$match: { "cliente.nombre": "Sofía Torres"}}, //solo dejo pasar los docus q cocincidan con su nombre
+    {
+        $lookup: { //necesito saber d la categoria del producto adquirido por sofi
+          from: "productos",
+          localField: "producto_id",
+          foreignField: "_id",
+          as: "info_produ"
+        }
+    },
+    {$unwind: "$info_produ"},
+    {
+        $group:{ //agrupo segun las categorias de sofia
+        _id:null,
+        categorias_interes: {$addToSet:"$info_produ.categoria"},
+        }
+       
+    },
+    //voy a buscar los productos de las categorias filtradas para luego calcular su promedio y hacer un nuevo filtro aewgun los mejores calificados
+
+    {
+        $lookup: {
+          from: "productos",
+          let: {cat_interes: "$categorias_interes"},
+          pipeline:[
+            {
+                $match:{
+                    $expr:{$in:["$categoria", "$$cat_interes"]}
+                }
+            }
+          ],
+          as: "productos_interesantes"
+        }
+    },
+    //unwind para procesarlos individualmente
+    {$unwind:"$productos_interesantes"},
+    {
+        $addFields: {
+          valoracion_avg: {$avg:"$productos_interesantes.valoraciones.puntuacion"}
+        }
+    },
+    {$sort:{valoracion_avg: -1}},
+    {$limit:3},
+    {
+        $project: {
+            _id:0,
+          nombre:"$productos_interesantes.nombre",
+          categoria: "$productos_interesantes.categoria",
+          precio:"$productos_interesantes.precio",
+          valoracion_avg:1
+        }
+    }
+])
+
