@@ -1,0 +1,81 @@
+use('kaufladen');
+
+
+db.ventas.aggregate([
+  // con $lookup traemos los datos de la coleccion producto
+  {
+    $lookup: {
+      from: "productos",
+      localField: "producto_id",
+      foreignField: "_id",
+      as: "producto_ventas"
+    }
+  },
+  { $unwind: "$producto_ventas" },
+
+  // Agrupar para tener todo lo que necesitamos junto
+  {
+    $group: {
+      _id: {
+        nombre: "$cliente.nombre",
+        producto_id: "$producto_ventas._id",
+        producto_nombre: "$producto_ventas.nombre",
+        categoria: "$producto_ventas.categoria"
+      },
+      total_producto: { $sum: "$total" },
+      cantidad_producto: { $sum: "$cantidad" },
+      total_categoria: { $sum: "$total" },
+      total_cliente: { $sum: "$total" },
+      cantidad_cliente: { $sum: "$cantidad" },
+      primer_compra: { $min: "$fecha" },
+      ultima_compra: { $max: "$fecha" }
+    }
+  },
+
+  // Ordenamos, entonces luego obtenenemos el primer producto y categoria
+  {
+    $sort: {
+      "_id.nombre": 1,
+      cantidad_producto: -1,
+      total_categoria: -1
+    }
+  },
+
+  // Agrupamos por cliente y obtenemos el primer producto y categoria
+  {
+    $group: {
+      _id: {
+        nombre: "$_id.nombre"
+      },
+      producto_favorito: { $first: "$_id.producto_nombre" },
+      categoria_preferida: { $first: "$_id.categoria" },
+      total_gastado: { $first: "$total_cliente" },
+      cantidad_compras: { $first: "$cantidad_cliente" },
+      primer_compra: { $first: "$primer_compra" },
+      ultima_compra: { $first: "$ultima_compra" }
+    }
+  },
+
+  // Mostrar todo lo necesario:
+  //- Total gastado por cada cliente
+  //- Número de compras realizadas
+  //- Producto favorito (el que más ha comprado)
+  //- Categoría preferida (donde más ha gastado)
+  //- Fecha de primera y última compra  
+
+  {
+    $project: {
+      _id: 0,
+      nombre: "$_id.nombre",
+      email: "$_id.email",
+      total_gastado: 1,
+      cantidad_compras: 1,
+      producto_favorito: 1,
+      categoria_preferida: 1,
+      primer_compra: 1,
+      ultima_compra: 1
+    }
+  }
+]);
+
+
