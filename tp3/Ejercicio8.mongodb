@@ -1,0 +1,49 @@
+db.ventas.aggregate([
+  // Agrupar por producto_id para obtener cantidad total y monto total
+  {
+    $group: {
+      _id: "$producto_id",
+      unidadesVendidas: { $sum: "$cantidad" },
+      montoTotal: { $sum: "$total" }
+    }
+  },
+  
+  // Ordenar por unidades vendidas y limitar a 3
+  { $sort: { unidadesVendidas: -1 } },  
+  { $limit: 3 },
+  
+  // Join con la colección productos para obtener detalles
+  {
+    $lookup: {
+      from: "productos",
+      localField: "_id",
+      foreignField: "_id",
+      as: "detalleProducto"
+    }
+  },
+  
+  // Deconstruir el array resultado del lookup
+  { $unwind: "$detalleProducto" },
+  
+  // Calcular la puntuación promedio de valoraciones
+  {
+    $addFields: {
+      puntuacionPromedio: {
+        $avg: "$detalleProducto.valoraciones.puntuacion"
+      }
+    }
+  },
+  
+  // Formatear el resultado 
+  {
+    $project: {
+      _id: 0,
+      idProducto: "$_id",
+      nombre: "$detalleProducto.nombre",
+      categoria: "$detalleProducto.categoria",
+      unidadesVendidas: 1,
+      montoTotal: 1,
+      puntuacionPromedio: 1
+    }
+  }
+])

@@ -1,0 +1,23 @@
+use("kaufladen");
+
+// Encontrar todos los productos de la categoría "Electrónica" con un precio superior a 500.
+
+db.productos.aggregate([
+  {
+    $match: {
+      categoria: "Electrónica",
+      precio: { $gt: 500 }
+    }
+  }
+])
+
+// Obtener el total de ventas por país del cliente, incluyendo la cantidad de transacciones y el monto total.
+
+db.ventas.aggregate([
+  {
+    $match: {
+      "cliente.pais": "España",
+      "estado": "Entregado"
+    }
+  }
+])
