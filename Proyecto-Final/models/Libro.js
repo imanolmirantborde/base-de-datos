@@ -25,12 +25,13 @@ const libroSchema = new mongoose.Schema({
   copias: {
     type: Number,
     required: true,
-    min: 0,
+    min: 0, //necesario para que no exsistan valores negativos
   },
   disponibles: {
     type: Number,
     required: true,
     min: 0,
+
   },
 });
 
