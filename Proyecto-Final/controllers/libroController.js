@@ -1,4 +1,4 @@
-const Libro = require('../models/Libro');
+const mongoose = require('mongoose');
 
 exports.agregarLibro = async (datos) => {
   const libro = new Libro(datos);
