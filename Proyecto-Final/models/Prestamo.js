@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const prestamoSchema = new mongoose.Schema({
   libroId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Libro',  //referencia a libro
+    ref: 'Libro',  //referenccia a libro
     required: true,
   },
   usuario: {
