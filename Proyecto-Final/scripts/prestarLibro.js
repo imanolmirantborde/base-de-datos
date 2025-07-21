@@ -12,7 +12,7 @@ const rl = readline.createInterface({
 
   rl.question('ISBN del libro a prestar: ', (isbn) => {
     rl.question('Nombre del usuario: ', async (usuario) => {
-        // hay q verificar que el usuario exsista, que no se repita el prestamo?
+      // hay q verificar que el usuario exsista, que no se repita el prestamo?
       try {
         const resultado = await prestarLibro(isbn, usuario);
         console.log('\nMensaje:', resultado.mensaje);

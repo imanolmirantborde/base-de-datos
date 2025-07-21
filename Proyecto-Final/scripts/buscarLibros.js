@@ -1,5 +1,5 @@
 const conectarDB = require('../config/db');
-const Libro = require('../models/libro');
+const Libro = require('../models/Libro');
 
 const buscarLibros = async () => {
   await conectarDB();
