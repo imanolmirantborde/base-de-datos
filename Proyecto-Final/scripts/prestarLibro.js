@@ -15,15 +15,14 @@ const rl = readline.createInterface({
       // hay q verificar que el usuario exsista, que no se repita el prestamo?
       try {
         const resultado = await prestarLibro(isbn, usuario);
-        console.log('\nMensaje:', resultado.mensaje);
+        console.log(resultado.mensaje);
         console.log('Préstamo registrado:', resultado.prestamo);
       } catch (error) {
-        console.error('\noh no! Error:', error.message);
+        console.error('Error:', error.message);
       } finally {
-        rl.close(); //termina la interaccion de la interfaz
+        rl.close();
+        process.exit();
       }
     });
   });
 })();
-
-//para ejeecutar: node scripts/prestarLibro.js

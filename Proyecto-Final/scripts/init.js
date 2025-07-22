@@ -79,10 +79,10 @@ const inicializarDB = async () => {
     prestamosEjemplo[1].libroId = libroPrestado._id;
 
     const prestamosInsertados = await Prestamo.insertMany(prestamosEjemplo);
-    console.log(` Se insertaron ${prestamosInsertados.length} préstamos.`);
+    console.log(`Se insertaron ${prestamosInsertados.length} préstamos.`);
 
   } catch (error) {
-    console.error(' Error al inicializar la base de datos:', error.message);
+    console.error('Error al inicializar la base de datos:', error.message);
   } finally {
     process.exit();
   }

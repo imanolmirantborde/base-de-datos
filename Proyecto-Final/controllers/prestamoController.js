@@ -15,7 +15,7 @@ async function prestarLibro(isbn, usuario) {
 
     const fechaPrestamo = new Date();
     const fechaDevolucion = new Date();
-    fechaDevolucion.setDate(fechaPrestamo.getDate() + 7); 
+    fechaDevolucion.setDate(fechaPrestamo.getDate() + 7);
 
     const nuevoPrestamo = new Prestamo({
         libroId: libro._id,
@@ -33,28 +33,28 @@ async function prestarLibro(isbn, usuario) {
 }
 
 async function devolverLibroPorTitulo(titulo) {
-  const libro = await Libro.findOne({ titulo: new RegExp(`^${titulo}$`, 'i') }); // busqueda exacta, caseinsensitive
-  if (!libro) {
-    throw new Error(`No hay libro con el titulo "${titulo}"`);
-  }
+    const libro = await Libro.findOne({ titulo: new RegExp(`^${titulo}$`, 'i') }); // busqueda exacta
+    if (!libro) {
+        throw new Error(`No hay libro con el titulo "${titulo}"`);
+    }
 
-  // Buscar el prestamo no devuelto mas reciente para el libro
-  const prestamo = await Prestamo.findOne({
-    libroId: libro._id,
-    devuelto: false //prestamo activo
-  }).sort({ fechaPrestamo: -1 }); // mas reciente
+    // Buscar el prestamo no devuelto mas reciente para el libro
+    const prestamo = await Prestamo.findOne({
+        libroId: libro._id,
+        devuelto: false //prestamo activo
+    }).sort({ fechaPrestamo: -1 }); // mas reciente
 
-  if (!prestamo) {
-    throw new Error(`No hay prestamos activos para "${titulo}"`);
-  }
- 
-  prestamo.devuelto = true; //marco como devuelto
-  await prestamo.save();
+    if (!prestamo) {
+        throw new Error(`No hay prestamos activos para "${titulo}"`);
+    }
 
-  libro.disponibles += 1; //aumento cantidad de copias dispo
-  await libro.save();
+    prestamo.devuelto = true; //marco como devuelto
+    await prestamo.save();
 
-  return { mensaje: `Libro devuelto: "${libro.titulo}"` };
+    libro.disponibles += 1; //aumento cantidad de copias dispo
+    await libro.save();
+
+    return { mensaje: `Libro devuelto: "${libro.titulo}"` };
 }
 
 async function reportePopulares() {
@@ -63,20 +63,20 @@ async function reportePopulares() {
         { $sort: { totalPrestamos: -1 } },
         { $limit: 5 },
         {
-        $lookup: {
-            from: "libros",
-            localField: "_id",
-            foreignField: "_id",
-            as: "libro",
-        },
+            $lookup: {
+                from: "libros",
+                localField: "_id",
+                foreignField: "_id",
+                as: "libro",
+            },
         },
         { $unwind: "$libro" },
         {
-        $project: {
-            titulo: "$libro.titulo",
-            autor: "$libro.autor",
-            totalPrestamos: 1,
-        },
+            $project: {
+                titulo: "$libro.titulo",
+                autor: "$libro.autor",
+                totalPrestamos: 1,
+            },
         },
     ]);
 

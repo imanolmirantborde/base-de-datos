@@ -1,6 +1,6 @@
 const readline = require('readline');
 const conectarDB = require('../config/db');
-const { devolverLibro } = require('../controllers/prestamoController');
+const { devolverLibroPorTitulo } = require('../controllers/prestamoController');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -13,13 +13,12 @@ const rl = readline.createInterface({
   rl.question('Titulo del libro a devolver: ', async (titulo) => {
     try {
       const resultado = await devolverLibroPorTitulo(titulo);
-      console.log('\n si! Mensaje:', resultado.mensaje);
+      console.log(resultado.mensaje);
     } catch (error) {
-      console.error('\noh no! Error:', error.message);
+      console.error('Error:', error.message);
     } finally {
       rl.close();
+      process.exit();
     }
   });
 })();
-
-//para ejeecutar: node scripts/devolverLibro.js
