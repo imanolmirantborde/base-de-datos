@@ -32,35 +32,42 @@
 
 ## Uso de los scripts, de las funciones
 
-#### Cargar libros y prestamos a la base:
+### Cargar libros y prestamos a la base:
 
 - node scripts/init.js
 
-- Agregar Libro, se carga por parámetro:
-  uso:
-  node scripts/agregarLibro.js "titulo" "autor" "isbn" "genero" año copias
+#### Agregar Libro, se carga por parámetro:
 
-- Buscar Libro:
+uso:
+node scripts/agregarLibro.js "titulo" "autor" "isbn" "genero" año copias
+
+#### Buscar Libro:
+
 - puede ser por titulo, autor o genero
   uso:
   node scripts/buscarLibros.js titulo "Rota se camina igual"
   node scripts/buscarLibros.js genero "Crecimiento Personal"
   node scripts/buscarLibros.js autor "Lorena Pronsky"
 
-- Prestar Libro:
-  node scripts/prestarLibro.js
+#### Prestar Libro:
+
+node scripts/prestarLibro.js
+
 - agregar isbn (1000,..., 1006) y nombre del usuario.
 
-- Devolver Libro:
-  node scripts/devolverLibro.js
+#### Devolver Libro:
+
+node scripts/devolverLibro.js
+
 - agregar titulo
 
-- ver reportes de libros mas prestaos:
-  node scripts/reportePopulares.js
+#### Ver reportes de libros mas prestaos:
+
+node scripts/reportePopulares.js
 
 ### Integrantes del grupo:
 
 - Imanol Mirant borde
 - Nicolas Velazquez
 - Jimena Martinez Arana
--
+- Micaela Rocío Zubiel
