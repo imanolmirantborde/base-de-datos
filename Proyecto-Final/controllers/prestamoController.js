@@ -32,22 +32,29 @@ async function prestarLibro(isbn, usuario) {
     };
 }
 
-async function devolverLibro(prestamoId) {
-    const prestamo = await Prestamo.findById(prestamoId);
-    if (!prestamo) {
-        throw new Error(`No se encontro ningun prestamo con ID ${prestamoId}`);
-    } if (prestamo.devuelto) {
-        throw new Error("Este libro ya fue devuelto");
-    }
+async function devolverLibroPorTitulo(titulo) {
+  const libro = await Libro.findOne({ titulo: new RegExp(`^${titulo}$`, 'i') }); // busqueda exacta, caseinsensitive
+  if (!libro) {
+    throw new Error(`No hay libro con el titulo "${titulo}"`);
+  }
 
-    prestamo.devuelto = true;
-    await prestamo.save();
+  // Buscar el prestamo no devuelto mas reciente para el libro
+  const prestamo = await Prestamo.findOne({
+    libroId: libro._id,
+    devuelto: false //prestamo activo
+  }).sort({ fechaPrestamo: -1 }); // mas reciente
 
-    const libro = await Libro.findById(prestamo.libroId);
-    libro.disponibles += 1;
-    await libro.save();
+  if (!prestamo) {
+    throw new Error(`No hay prestamos activos para "${titulo}"`);
+  }
+ 
+  prestamo.devuelto = true; //marco como devuelto
+  await prestamo.save();
 
-    return { mensaje: `libro devuelto: "${libro.titulo}"` };
+  libro.disponibles += 1; //aumento cantidad de copias dispo
+  await libro.save();
+
+  return { mensaje: `Libro devuelto: "${libro.titulo}"` };
 }
 
 async function reportePopulares() {
@@ -78,6 +85,6 @@ async function reportePopulares() {
 
 module.exports = {
     prestarLibro,
-    devolverLibro,
+    devolverLibroPorTitulo,
     reportePopulares,
 };

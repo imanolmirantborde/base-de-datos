@@ -10,12 +10,12 @@ const rl = readline.createInterface({
 (async () => {
   await conectarDB();
 
-  rl.question('ID del préstamo a devolver: ', async (prestamoId) => {
+  rl.question('Titulo del libro a devolver: ', async (titulo) => {
     try {
-      const resultado = await devolverLibro(prestamoId);
-      console.log('\nMensaje:', resultado.mensaje);
+      const resultado = await devolverLibroPorTitulo(titulo);
+      console.log('\n si! Mensaje:', resultado.mensaje);
     } catch (error) {
-      console.error('\nOh no! Error:', error.message);
+      console.error('\noh no! Error:', error.message);
     } finally {
       rl.close();
     }

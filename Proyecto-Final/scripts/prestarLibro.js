@@ -3,8 +3,8 @@ const conectarDB = require('../config/db');
 const { prestarLibro } = require('../controllers/prestamoController');
 
 const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+  input: process.stdin, //lee los datos ingresados 
+  output: process.stdout // muestra preguntas y resultados por consola
 });
 
 (async () => {
@@ -20,7 +20,7 @@ const rl = readline.createInterface({
       } catch (error) {
         console.error('\noh no! Error:', error.message);
       } finally {
-        rl.close();
+        rl.close(); //termina la interaccion de la interfaz
       }
     });
   });
