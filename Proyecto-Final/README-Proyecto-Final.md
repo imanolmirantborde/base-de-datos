@@ -32,7 +32,7 @@
 
 ## Uso de los scripts, de las funciones
 
-### Cargar libros y prestamos a la base:
+#### Cargar libros y prestamos a la base:
 
 - node scripts/init.js
 
@@ -43,11 +43,12 @@ node scripts/agregarLibro.js "titulo" "autor" "isbn" "genero" año copias
 
 #### Buscar Libro:
 
-- puede ser por titulo, autor o genero
-  uso:
-  node scripts/buscarLibros.js titulo "Rota se camina igual"
-  node scripts/buscarLibros.js genero "Crecimiento Personal"
-  node scripts/buscarLibros.js autor "Lorena Pronsky"
+puede ser por titulo, autor o genero
+
+- Uso:
+- node scripts/buscarLibros.js titulo "Rota se camina igual"
+- node scripts/buscarLibros.js genero "Crecimiento Personal"
+- node scripts/buscarLibros.js autor "Lorena Pronsky"
 
 #### Prestar Libro:
 
