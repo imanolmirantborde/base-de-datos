@@ -23,9 +23,9 @@ const agregarLibro = async () => {
 
   try {
     const resultado = await libro.save();
-    console.log('✅ Libro agregado:', resultado);
+    console.log(' Libro agregado:', resultado);
   } catch (error) {
-    console.error('❌ Error al agregar libro:', error.message);
+    console.error(' Error al agregar libro:', error.message);
   } finally {
     process.exit();
   }

@@ -1,9 +1,10 @@
-require('../config/db');
+const conectarDB = require('../config/db');
 const Prestamo = require('../models/Prestamo');
 const Libro = require('../models/Libro');
 
 async function reportePopulares() {
   try {
+    await conectarDB();
     const populares = await Prestamo.aggregate([
       {
         $group: {
@@ -16,7 +17,7 @@ async function reportePopulares() {
       },
       {
         $lookup: {
-          from: 'libros', 
+          from: 'libros',
           localField: '_id',
           foreignField: '_id',
           as: 'libroInfo',
