@@ -32,6 +32,8 @@ async function reportePopulares() {
           autor: '$libroInfo.autor',
           isbn: '$libroInfo.isbn',
           prestamos: '$prestamosCount',
+          copias: '$libroInfo.copias',
+          disponibles: '$libroInfo.disponibles',
         },
       },
     ]);
@@ -41,10 +43,10 @@ async function reportePopulares() {
       return;
     }
 
-    console.log('--- Reporte de Libros Más Populares ---');
+    console.log('--- Reporte de Libros Más Populares y su Disponibilidad ---');
     populares.forEach((libro, index) => {
       console.log(
-        `${index + 1}. Título: ${libro.titulo}, Autor: ${libro.autor}, ISBN: ${libro.isbn}, Préstamos: ${libro.prestamos}`
+        `${index + 1}. Título: ${libro.titulo}, Autor: ${libro.autor}, Préstamos: ${libro.prestamos}, Disponibles: ${libro.disponibles}`
       );
     });
   } catch (error) {
