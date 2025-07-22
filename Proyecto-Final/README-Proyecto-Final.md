@@ -30,6 +30,8 @@
 
 5. tener MongoDB corriendo localmente
 
+## Interface del sistema: Consola
+
 ## Uso de los scripts, de las funciones
 
 #### Cargar libros y prestamos a la base:
