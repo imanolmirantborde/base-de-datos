@@ -34,37 +34,37 @@
 
 #### Cargar libros y prestamos a la base:
 
-- node scripts/init.js
+- _node scripts/init.js_
 
 #### Agregar Libro, se carga por parámetro:
 
 uso:
-node scripts/agregarLibro.js "titulo" "autor" "isbn" "genero" año copias
+_node scripts/agregarLibro.js "titulo" "autor" "isbn" "genero" año copias_
 
 #### Buscar Libro:
 
 puede ser por titulo, autor o genero
 
 - Uso:
-- node scripts/buscarLibros.js titulo "Rota se camina igual"
-- node scripts/buscarLibros.js genero "Crecimiento Personal"
-- node scripts/buscarLibros.js autor "Lorena Pronsky"
+- _node scripts/buscarLibros.js titulo "Rota se camina igual"_
+- _node scripts/buscarLibros.js genero "Crecimiento Personal"_
+- _node scripts/buscarLibros.js autor "Lorena Pronsky"_
 
 #### Prestar Libro:
 
-node scripts/prestarLibro.js
+_node scripts/prestarLibro.js_
 
 - agregar isbn (1000,..., 1006) y nombre del usuario.
 
 #### Devolver Libro:
 
-node scripts/devolverLibro.js
+_node scripts/devolverLibro.js_
 
 - agregar titulo
 
 #### Ver reportes de libros mas prestaos:
 
-node scripts/reportePopulares.js
+_node scripts/reportePopulares.js_
 
 ### Integrantes del grupo:
 
